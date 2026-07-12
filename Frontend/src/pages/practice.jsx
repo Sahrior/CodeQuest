@@ -1,12 +1,11 @@
 import React from 'react'
 
-const practice = () => {
+const Practice = () => {
   return (
     <div>
-      practice
-      
+      Practice Page
     </div>
   )
 }
 
-export default practice
+export default Practice

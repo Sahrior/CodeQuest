@@ -1,12 +1,11 @@
 import React from 'react'
 
-const compete = () => {
+const Compete = () => {
   return (
     <div>
-      compete
-      
+      Compete Page
     </div>
   )
 }
 
-export default compete
+export default Compete

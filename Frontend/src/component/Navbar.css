@@ -112,3 +112,22 @@ body{
     background:#e5e7eb;
     transform:scale(1.05);
 }
+
+
+.nav-menu a{
+    text-decoration: none;
+    color: inherit;
+}
+
+.nav-menu a:visited{
+    color: inherit;
+}
+
+.nav-menu a:hover{
+    color: inherit;
+}
+
+/* Logo link */
+.navbar > a{
+    text-decoration: none;
+}

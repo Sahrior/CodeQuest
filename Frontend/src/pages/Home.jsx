@@ -1,11 +1,11 @@
 import React from 'react'
 
-const Prepare = () => {
+const Home = () => {
   return (
     <div>
-      Prepare Page
+      home
     </div>
   )
 }
 
-export default Prepare
+export default Home

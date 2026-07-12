@@ -1,11 +1,11 @@
 import React from 'react'
 
-const Prepare = () => {
+const Play = () => {
   return (
     <div>
-      Prepare Page
+      play page
     </div>
   )
 }
 
-export default Prepare
+export default Play

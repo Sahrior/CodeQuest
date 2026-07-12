@@ -1,11 +1,11 @@
 import React from 'react'
 
-const apply = () => {
+const Apply = () => {
   return (
     <div>
-      apply
+      Apply Page
     </div>
   )
 }
 
-export default apply
+export default Apply
