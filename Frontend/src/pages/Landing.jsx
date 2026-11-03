@@ -1,16 +1,19 @@
-// Landing.jsx — Code Quest cinematic scroll landing page
-// Requires: npm i three gsap   (react-router-dom + Tailwind already in your project)
+
 import { useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
 import * as THREE from "three";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 
+
+import logo from "../assets/logo.png";
+
+
 gsap.registerPlugin(ScrollTrigger);
 
-/* ------------------------------------------------------------------ */
-/*  CONTENT                                                            */
-/* ------------------------------------------------------------------ */
+
+// section list in landing page : feature list , review , comapnise name stored in array ! use it in the componet 
+
 const FEATURES = [
   { n: "01", title: "Play & Learn", icon: "🎮", text: "Learn coding while playing games. Every level is a real problem, every boss is a bug.", tag: "levels · XP · streaks" },
   { n: "02", title: "Compete in Contests", icon: "🏆", text: "Weekly contests and live leaderboards. Race other students and climb the ranks.", tag: "weekly · live · ranked" },
@@ -29,9 +32,9 @@ const REVIEWS = [
 
 const COMPANIES = ["Netflix", "Mindrise", "Walmart", "Rapid Care", "Amazon", "Zapro", "GeeksforGeeks"];
 
-/* ------------------------------------------------------------------ */
-/*  HELPERS                                                            */
-/* ------------------------------------------------------------------ */
+// helper function
+
+
 const rand = (a, b) => a + Math.random() * (b - a);
 
 function canvasTexture(w, h, draw, { srgb = true, repeat } = {}) {
@@ -119,9 +122,8 @@ function box(w, h, d, mat, x = 0, y = 0, z = 0) {
   return m;
 }
 
-/* ------------------------------------------------------------------ */
-/*  COMPONENT                                                          */
-/* ------------------------------------------------------------------ */
+// main component 
+
 export default function Landing() {
   const mountRef = useRef(null);
   const scrollRef = useRef(null);
@@ -1062,10 +1064,17 @@ export default function Landing() {
       {/* vignette */}
       <div className="pointer-events-none fixed inset-0 z-10" style={{ background: "radial-gradient(ellipse at center, transparent 55%, rgba(0,0,0,.55) 100%)" }} />
 
-      {/* corner UI */}
-      <div className="fixed left-6 top-5 z-30 flex items-center gap-2 text-lg font-bold tracking-tight">
-        <span className="rounded-md bg-[#d4562a] px-2 py-0.5 font-mono text-sm">{"</>"}</span> Code Quest
-      </div>
+      {/* l0go */}
+      <Link
+        to="/"
+        aria-label="Code Quest home"
+        className="fixed left-6 top-4 z-30 flex items-center gap-2.5 transition hover:scale-105"
+      >
+        <img src={logo} alt="Code Quest logo" className="h-9 w-auto md:h-10" />
+        <span className="text-xl font-bold tracking-tight text-[#ff7a45] md:text-2xl">
+          Code Quest
+        </span>
+      </Link>
       <Link to="/signup" className="fixed right-6 top-5 z-30 rounded-full bg-white/10 px-5 py-2 text-sm font-semibold backdrop-blur-md ring-1 ring-white/25 transition hover:bg-[#d4562a] hover:ring-[#d4562a]">
         Get Started →
       </Link>
