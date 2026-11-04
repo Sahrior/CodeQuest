@@ -1,6 +1,7 @@
 import { useRef, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import logo from "../assets/logo.png";
+import { API_URL } from "../api";
 import "./Signup.css";
 
 export const ROLES = ["Student", "Company", "Admin"];
@@ -10,6 +11,8 @@ const copy = {
   Company: { title: "Welcome back,\nPartner", sub: "Manage your tech talent pipeline with ease.", idLabel: "Work Email", idPh: "name@company.com", btn: "Login to Dashboard" },
   Admin: { title: "Admin\nPortal", sub: "Platform management access", idLabel: "Admin ID / Private Code", idPh: "Enter your unique ID", btn: "Secure Login" },
 };
+
+const HOME = { Student: "/student", Company: "/company", Admin: "/admin" };
 
 const FACES = ["</>", "{ }", ">_", "#", "=>", "01"];
 const TILES = [
@@ -117,17 +120,54 @@ const EyeIcon = ({ off }) => (
 );
 
 export default function Login() {
+  const navigate = useNavigate();
   const [role, setRole] = useState("Student");
   const [show, setShow] = useState(false);
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
   const c = copy[role];
 
-  const onSubmit = (e) => {
+  const switchRole = (r) => {
+    setRole(r);
+    setError("");
+  };
+
+  const onSubmit = async (e) => {
     e.preventDefault();
-    // gonna implenmet login woth role here {roles array ache ota access krboalwys}
+    setError("");
+    setLoading(true);
+
+    const data = new FormData(e.target);
+
+    try {
+      const res = await fetch(`${API_URL}/api/auth/login`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          role,
+          id: data.get("id"),
+          password: data.get("password"),
+        }),
+      });
+      const result = await res.json();
+
+      if (!res.ok) {
+        setError(result.message || "Login failed");
+        return;
+      }
+
+      localStorage.setItem("token", result.token);
+      localStorage.setItem("user", JSON.stringify(result.user));
+      navigate(HOME[result.user.role]);
+    } catch {
+      setError("Cannot reach the server. Is the backend running?");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
-    <AuthShell role={role} setRole={setRole} title={c.title} sub={c.sub}>
+    <AuthShell role={role} setRole={switchRole} title={c.title} sub={c.sub}>
       <form onSubmit={onSubmit}>
         <div className="au-field">
           <label htmlFor="id">{c.idLabel}</label>
@@ -145,7 +185,11 @@ export default function Login() {
           <a href="#" className="au-link au-forgot">Forgot Password?</a>
         </div>
 
-        <button type="submit" className="au-submit">{c.btn}</button>
+        {error && <p style={{ color: "#ef4444", fontSize: "0.9rem", margin: "0 0 12px" }}>{error}</p>}
+
+        <button type="submit" className="au-submit" disabled={loading}>
+          {loading ? "Signing in..." : c.btn}
+        </button>
 
         {role !== "Admin" ? (
           <>

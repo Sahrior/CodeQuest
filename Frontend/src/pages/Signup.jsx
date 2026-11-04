@@ -1,11 +1,16 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { AuthShell } from "./Login";
+import { API_URL } from "../api";
 import "./Signup.css";
 
 export default function Signup() {
+  const navigate = useNavigate();
   const [role, setRole] = useState("Student");
   const [form, setForm] = useState({});
+  const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const handleChange = (e) => {
     const { name, value, type, checked, files } = e.target;
@@ -18,13 +23,42 @@ export default function Signup() {
   const switchRole = (r) => {
     setRole(r);
     setForm({});
+    setError("");
+    setSuccess("");
   };
 
-  const onSubmit = (e) => {
+  const onSubmit = async (e) => {
     e.preventDefault();
-    const payload = { ...form, role };
-    console.log(payload);
-    // register api call krbo  `payload`
+    if (role === "Admin") return;
+
+    setError("");
+    setSuccess("");
+    setLoading(true);
+
+    const fields = { ...form };
+    delete fields.document;
+    delete fields.agree;
+
+    try {
+      const res = await fetch(`${API_URL}/api/auth/signup`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ ...fields, role }),
+      });
+      const data = await res.json();
+
+      if (!res.ok) {
+        setError(data.message || "Signup failed");
+        return;
+      }
+
+      setSuccess(data.message);
+      setTimeout(() => navigate("/login"), 2000);
+    } catch {
+      setError("Cannot reach the server. Is the backend running?");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -58,6 +92,7 @@ export default function Signup() {
             <div className="au-field">
               <label htmlFor="password">Password</label>
               <input id="password" name="password" type="password" placeholder="••••••••" onChange={handleChange} required />
+              <span className="au-hint">At least 8 characters.</span>
             </div>
           </>
         )}
@@ -114,25 +149,20 @@ export default function Signup() {
         )}
 
         {role === "Admin" && (
-          <>
-            <div className="au-field">
-              <label htmlFor="accessCode">Private access code</label>
-              <input id="accessCode" name="accessCode" placeholder="Enter your admin code" onChange={handleChange} required />
-            </div>
-            <div className="au-field">
-              <label htmlFor="password">Password</label>
-              <input id="password" name="password" type="password" placeholder="••••••••" onChange={handleChange} required />
-            </div>
-            <div className="au-field">
-              <label htmlFor="confirmPassword">Confirm password</label>
-              <input id="confirmPassword" name="confirmPassword" type="password" placeholder="••••••••" onChange={handleChange} required />
-            </div>
-          </>
+          <p className="au-sub">
+            Admin accounts can&apos;t be created here. They are issued by the CodeQuest team.
+            If you already have an admin ID, go to <Link to="/login" className="au-link">Log in</Link>.
+          </p>
         )}
 
-        <button type="submit" className="au-submit">
-          {role === "Admin" ? "Create admin account" : "Create account"}
-        </button>
+        {error && <p style={{ color: "#ef4444", fontSize: "0.9rem", margin: "0 0 12px" }}>{error}</p>}
+        {success && <p style={{ color: "#22c55e", fontSize: "0.9rem", margin: "0 0 12px" }}>{success}</p>}
+
+        {role !== "Admin" && (
+          <button type="submit" className="au-submit" disabled={loading}>
+            {loading ? "Creating account..." : "Create account"}
+          </button>
+        )}
 
         <p className="au-footer">
           Already have an account? <Link to="/login" className="au-link">Log in</Link>
