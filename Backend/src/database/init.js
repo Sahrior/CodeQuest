@@ -26,6 +26,7 @@ const tables = {
             premium_expires_at DATETIME NULL,
             cv_url VARCHAR(500) NULL,
             bio TEXT NULL,
+            profile_pic_url VARCHAR(500) NULL,
             created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
         )
     `,
@@ -40,6 +41,7 @@ const tables = {
             is_verified BOOLEAN NOT NULL DEFAULT FALSE,
             verified_by INT UNSIGNED NULL,
             verified_at DATETIME NULL,
+            profile_pic_url VARCHAR(500) NULL,
             created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 
             FOREIGN KEY (verified_by)

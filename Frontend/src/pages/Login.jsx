@@ -185,7 +185,7 @@ export default function Login() {
           <a href="#" className="au-link au-forgot">Forgot Password?</a>
         </div>
 
-        {error && <p style={{ color: "#ef4444", fontSize: "0.9rem", margin: "0 0 12px" }}>{error}</p>}
+        {error && <p className="au-error">{error}</p>}
 
         <button type="submit" className="au-submit" disabled={loading}>
           {loading ? "Signing in..." : c.btn}

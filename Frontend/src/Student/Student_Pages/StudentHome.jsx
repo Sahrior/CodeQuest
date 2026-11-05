@@ -1,6 +1,8 @@
 import React from 'react'
 
 import { useNavigate } from "react-router-dom";
+import StudentNavbar from '../Student_Components/StudentNavbar';
+import StudentNavbarPreminum from '../Student_Components/StudentNavbarPreminum';
 
 
 
@@ -8,17 +10,18 @@ import { useNavigate } from "react-router-dom";
 
 const StudentHome = () => {
 
-const navigate = useNavigate();
-const logout = () => {
-  localStorage.removeItem("token");
-  localStorage.removeItem("user");
-  navigate("/login");
-};
+
 
   return (
     <div>
+
+      <StudentNavbar/>
+
+
+
+
       student home page
-      <button onClick={logout}>Logout</button>
+      
       
     </div>
   )

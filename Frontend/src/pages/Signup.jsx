@@ -155,8 +155,8 @@ export default function Signup() {
           </p>
         )}
 
-        {error && <p style={{ color: "#ef4444", fontSize: "0.9rem", margin: "0 0 12px" }}>{error}</p>}
-        {success && <p style={{ color: "#22c55e", fontSize: "0.9rem", margin: "0 0 12px" }}>{success}</p>}
+        {error && <p className="au-error">{error}</p>}
+        {success && <p className="au-success">{success}</p>}
 
         {role !== "Admin" && (
           <button type="submit" className="au-submit" disabled={loading}>
