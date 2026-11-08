@@ -94,7 +94,10 @@ const StudentNavbar = () => {
                 <button
                   type="button"
                   role="menuitem"
-                  onClick={() => setMenuOpen(false)} // TODO: go to Edit_Profile page
+                  onClick={() => {
+                    setMenuOpen(false);
+                    navigate("/student/edit-profile");
+                  }}
                   className="block w-full rounded-lg px-3 py-2 text-left text-sm text-slate-900 hover:bg-slate-100"
                 >
                   Edit profile

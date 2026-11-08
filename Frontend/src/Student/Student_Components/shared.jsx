@@ -1,3 +1,5 @@
+import { API_URL } from "../../api";
+
 export const TIERS = [
   { min: 2400, name: "Grandmaster", color: "#dc2626" },
   { min: 2100, name: "Master", color: "#ea580c" },
@@ -20,6 +22,9 @@ export const tooltipStyle = {
 
 export const linkSmall =
   "text-sm font-medium text-orange-600 no-underline hover:text-orange-700 hover:underline";
+
+export const assetUrl = (value) =>
+  value && value.startsWith("/uploads/") ? `${API_URL}${value}` : value;
 
 export const initialsOf = (name = "") =>
   name
@@ -44,7 +49,7 @@ export function Avatar({ name, src, size = 40 }) {
   const style = { width: size, height: size, fontSize: size * 0.38 };
 
   if (src) {
-    return <img className="shrink-0 rounded-full object-cover" style={style} src={src} alt={name} />;
+    return <img className="shrink-0 rounded-full object-cover" style={style} src={assetUrl(src)} alt={name} />;
   }
 
   return (
@@ -57,9 +62,12 @@ export function Avatar({ name, src, size = 40 }) {
   );
 }
 
-export function Card({ title, subtitle, action, className = "", children }) {
+export function Card({ id, title, subtitle, action, className = "", children }) {
   return (
-    <section className={`min-w-0 rounded-2xl border border-orange-100 bg-white p-5 shadow-sm ${className}`}>
+    <section
+      id={id}
+      className={`min-w-0 scroll-mt-24 rounded-2xl border border-orange-100 bg-white p-5 shadow-sm ${className}`}
+    >
       {(title || action) && (
         <header className="mb-4 flex items-start justify-between gap-3">
           <div>
