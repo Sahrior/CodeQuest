@@ -14,7 +14,7 @@ const tables = {
         )
     `,
 
-    student: `
+        student: `
         CREATE TABLE IF NOT EXISTS student (
             student_id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
             name VARCHAR(100) NOT NULL,
@@ -27,6 +27,26 @@ const tables = {
             cv_url VARCHAR(500) NULL,
             bio TEXT NULL,
             profile_pic_url VARCHAR(500) NULL,
+            headline VARCHAR(150) NULL,
+            phone VARCHAR(20) NULL,
+            country VARCHAR(100) NULL,
+            city VARCHAR(100) NULL,
+            university VARCHAR(150) NULL,
+            degree VARCHAR(100) NULL,
+            graduation_year YEAR NULL,
+            skills JSON NULL,
+            preferred_languages JSON NULL,
+            algorithms JSON NULL,
+            tech_stack JSON NULL,
+            github_url VARCHAR(255) NULL,
+            linkedin_url VARCHAR(255) NULL,
+            portfolio_url VARCHAR(255) NULL,
+            leetcode_username VARCHAR(100) NULL,
+            codeforces_handle VARCHAR(100) NULL,
+            codechef_username VARCHAR(100) NULL,
+            hackerrank_username VARCHAR(100) NULL,
+            open_to_work BOOLEAN NOT NULL DEFAULT FALSE,
+            is_profile_public BOOLEAN NOT NULL DEFAULT TRUE,
             created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
         )
     `,

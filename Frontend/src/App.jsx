@@ -4,6 +4,7 @@ import Signup from "./pages/Signup";
 import Login from "./pages/Login";
 import ProtectedRoute from "./components/ProtectedRoute";
 import StudentHome from "./Student/Student_Pages/StudentHome";
+import StudentProfile from "./Student/Student_Pages/StudentProfile";
 import CompanyHome from "./Company/Company_Pages/CompanyHome";
 import AdminHome from "./Admin/Admin_Pages/AdminHome";
 
@@ -19,6 +20,14 @@ export default function App() {
         element={
           <ProtectedRoute role="Student">
             <StudentHome />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/student/profile/:id"
+        element={
+          <ProtectedRoute role="Student">
+            <StudentProfile />
           </ProtectedRoute>
         }
       />
