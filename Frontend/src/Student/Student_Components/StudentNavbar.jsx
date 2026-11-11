@@ -1,6 +1,8 @@
 import React, { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import logo from "../../assets/logo.png";
+import MessagesButton from "./MessagesButton";
+import { closeSocket } from "../../socketclient";
 
 const NAV_ITEMS = ["Play and Learn", "Practice", "Compete", "Apply", "Interview"];
 
@@ -12,6 +14,7 @@ const StudentNavbar = () => {
   const profileRef = useRef(null);
 
   const logout = () => {
+    closeSocket();
     localStorage.removeItem("token");
     localStorage.removeItem("user");
     navigate("/login");
@@ -70,6 +73,8 @@ const StudentNavbar = () => {
           >
             Buy premium
           </button>
+
+          <MessagesButton />
 
           {/* Profile + dropdown */}
           <div className="relative" ref={profileRef}>

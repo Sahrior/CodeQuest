@@ -3,7 +3,10 @@ import { useNavigate } from "react-router-dom";
 import { API_URL } from "../../api";
 import { Avatar, tierOf } from "./shared";
 
-export default function StudentSearch() {
+export default function StudentSearch({
+  onSelect,
+  placeholder = "Search students by name, university, skill or handle",
+}) {
   const navigate = useNavigate();
   const boxRef = useRef(null);
   const [term, setTerm] = useState("");
@@ -55,16 +58,21 @@ export default function StudentSearch() {
     };
   }, [text, ready]);
 
-  const openProfile = (id) => {
+  const choose = (student) => {
     setOpen(false);
     setTerm("");
     setResults([]);
-    navigate(`/student/profile/${id}`);
+
+    if (onSelect) {
+      onSelect(student);
+    } else {
+      navigate(`/student/profile/${student.id}`);
+    }
   };
 
   const onKeyDown = (e) => {
     if (e.key === "Escape") setOpen(false);
-    if (e.key === "Enter" && results.length > 0) openProfile(results[0].id);
+    if (e.key === "Enter" && results.length > 0) choose(results[0]);
   };
 
   return (
@@ -90,7 +98,7 @@ export default function StudentSearch() {
           }}
           onFocus={() => setOpen(true)}
           onKeyDown={onKeyDown}
-          placeholder="Search students by name, university, skill or handle"
+          placeholder={placeholder}
           className="w-full border-0 bg-transparent text-sm text-stone-900 outline-none placeholder:text-stone-400"
           aria-label="Search students"
         />
@@ -123,7 +131,7 @@ export default function StudentSearch() {
                 <li key={s.id}>
                   <button
                     type="button"
-                    onClick={() => openProfile(s.id)}
+                    onClick={() => choose(s)}
                     className="flex w-full cursor-pointer items-center gap-3 border-0 bg-white px-4 py-2.5 text-left hover:bg-orange-50"
                   >
                     <Avatar name={s.name} src={s.profile_pic_url} size={36} />

@@ -14,7 +14,7 @@ const tables = {
         )
     `,
 
-        student: `
+    student: `
         CREATE TABLE IF NOT EXISTS student (
             student_id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
             name VARCHAR(100) NOT NULL,
@@ -401,6 +401,67 @@ const tables = {
                 ON DELETE CASCADE,
 
             FOREIGN KEY (student_id)
+                REFERENCES student(student_id)
+                ON DELETE CASCADE
+        )
+    `,
+
+    conversation: `
+        CREATE TABLE IF NOT EXISTS conversation (
+            conversation_id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+            student_one_id INT UNSIGNED NOT NULL,
+            student_two_id INT UNSIGNED NOT NULL,
+            last_message_at DATETIME NULL,
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+
+            UNIQUE KEY uq_conversation_pair (student_one_id, student_two_id),
+            INDEX idx_conversation_two (student_two_id),
+
+            FOREIGN KEY (student_one_id)
+                REFERENCES student(student_id)
+                ON DELETE CASCADE,
+
+            FOREIGN KEY (student_two_id)
+                REFERENCES student(student_id)
+                ON DELETE CASCADE
+        )
+    `,
+
+    message: `
+        CREATE TABLE IF NOT EXISTS message (
+            message_id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+            conversation_id INT UNSIGNED NOT NULL,
+            sender_id INT UNSIGNED NOT NULL,
+            content VARCHAR(2000) NOT NULL,
+            read_at DATETIME NULL,
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+
+            INDEX idx_message_conversation (conversation_id, message_id),
+            INDEX idx_message_unread (conversation_id, sender_id, read_at),
+
+            FOREIGN KEY (conversation_id)
+                REFERENCES conversation(conversation_id)
+                ON DELETE CASCADE,
+
+            FOREIGN KEY (sender_id)
+                REFERENCES student(student_id)
+                ON DELETE CASCADE
+        )
+    `,
+
+    student_block: `
+        CREATE TABLE IF NOT EXISTS student_block (
+            blocker_id INT UNSIGNED NOT NULL,
+            blocked_id INT UNSIGNED NOT NULL,
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+
+            PRIMARY KEY (blocker_id, blocked_id),
+
+            FOREIGN KEY (blocker_id)
+                REFERENCES student(student_id)
+                ON DELETE CASCADE,
+
+            FOREIGN KEY (blocked_id)
                 REFERENCES student(student_id)
                 ON DELETE CASCADE
         )

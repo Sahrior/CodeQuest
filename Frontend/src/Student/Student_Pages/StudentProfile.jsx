@@ -208,6 +208,16 @@ const StudentProfile = () => {
                     ))}
                   </div>
                 )}
+                {!data.is_self && (
+                  <div className="mt-4">
+                    <Link
+                      to={`/student/messages/${profile.id}`}
+                      className="inline-block rounded-lg bg-orange-500 px-5 py-2 text-sm font-semibold text-white no-underline hover:bg-orange-600"
+                    >
+                      Message
+                    </Link>
+                  </div>
+                )}
               </div>
             </div>
 

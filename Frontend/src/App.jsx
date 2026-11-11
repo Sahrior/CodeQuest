@@ -6,6 +6,7 @@ import ProtectedRoute from "./components/ProtectedRoute";
 import StudentHome from "./Student/Student_Pages/StudentHome";
 import StudentProfile from "./Student/Student_Pages/StudentProfile";
 import Edit_profile from "./Student/Student_Pages/Edit_profile";
+import Messages from "./Student/Student_Pages/Messages";
 import CompanyHome from "./Company/Company_Pages/CompanyHome";
 import AdminHome from "./Admin/Admin_Pages/AdminHome";
 
@@ -37,6 +38,22 @@ export default function App() {
         element={
           <ProtectedRoute role="Student">
             <Edit_profile />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/student/messages"
+        element={
+          <ProtectedRoute role="Student">
+            <Messages />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/student/messages/:studentId"
+        element={
+          <ProtectedRoute role="Student">
+            <Messages />
           </ProtectedRoute>
         }
       />
