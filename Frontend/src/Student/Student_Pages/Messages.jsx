@@ -41,7 +41,14 @@ const request = async (navigate, path, { method = "GET", json } = {}) => {
   }
 
   const data = await res.json().catch(() => ({}));
-  if (!res.ok) throw new Error(data.message || "Something went wrong");
+  if (!res.ok) {
+    throw new Error(
+      data.message ||
+        (res.status === 404
+          ? "The server does not have the messaging routes yet. Update the backend files and restart it."
+          : `Request failed (${res.status})`)
+    );
+  }
   return data;
 };
 
@@ -441,7 +448,13 @@ const Messages = () => {
       <Navbar />
 
       <main className="mx-auto max-w-[1240px] px-5 py-6">
-        <div className="flex h-[calc(100vh-140px)] min-h-[520px] overflow-hidden rounded-2xl border border-orange-100 bg-white shadow-sm">
+        <div className="mb-3">
+          <Link to="/student" className={linkSmall}>
+            ← Back to home
+          </Link>
+        </div>
+
+        <div className="flex h-[calc(100vh-210px)] min-h-[520px] overflow-hidden rounded-2xl border border-orange-100 bg-white shadow-sm">
           <aside
             className={`${activeId ? "hidden md:flex" : "flex"} w-full min-w-0 flex-col border-r border-orange-100 md:w-[340px] md:shrink-0`}
           >
@@ -637,10 +650,7 @@ const Messages = () => {
         </div>
 
         <p className="m-0 mt-3 text-center text-xs text-stone-400">
-          Be respectful. You can block anyone who makes you uncomfortable.{" "}
-          <Link to="/student" className={linkSmall}>
-            Back to home
-          </Link>
+          Be respectful. You can block anyone who makes you uncomfortable.
         </p>
       </main>
     </div>

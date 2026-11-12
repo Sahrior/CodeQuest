@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import logo from "../../assets/logo.png";
 import MessagesButton from "./MessagesButton";
 import { closeSocket } from "../../socketclient";
@@ -52,9 +52,9 @@ const StudentNavbar = () => {
     <header className="sticky top-0 z-50 border-b border-slate-200 bg-white/90 backdrop-blur">
       <div className="mx-auto flex h-[68px] max-w-7xl items-center gap-4 px-4 md:gap-8 md:px-6">
         {/* Logo */}
-        <div className="flex shrink-0 items-center">
+        <Link to="/student" aria-label="Go to home" className="flex shrink-0 items-center">
           <img src={logo} alt="Code Quest" className="h-9 w-auto" />
-        </div>
+        </Link>
 
         {/* Middle links (desktop) */}
         <nav className="hidden flex-1 items-center gap-1 lg:flex" aria-label="Main">
