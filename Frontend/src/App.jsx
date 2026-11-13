@@ -7,6 +7,7 @@ import StudentHome from "./Student/Student_Pages/StudentHome";
 import StudentProfile from "./Student/Student_Pages/StudentProfile";
 import Edit_profile from "./Student/Student_Pages/Edit_profile";
 import Messages from "./Student/Student_Pages/Messages";
+import Post from "./Student/Student_Pages/Post";
 import CompanyHome from "./Company/Company_Pages/CompanyHome";
 import AdminHome from "./Admin/Admin_Pages/AdminHome";
 
@@ -54,6 +55,14 @@ export default function App() {
         element={
           <ProtectedRoute role="Student">
             <Messages />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/student/posts"
+        element={
+          <ProtectedRoute role="Student">
+            <Post />
           </ProtectedRoute>
         }
       />

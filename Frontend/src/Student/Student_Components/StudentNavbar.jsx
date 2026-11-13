@@ -1,23 +1,41 @@
 import React, { useEffect, useRef, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import logo from "../../assets/logo.png";
 import MessagesButton from "./MessagesButton";
 import { closeSocket } from "../../socketclient";
 
-const NAV_ITEMS = ["Play and Learn", "Practice", "Compete", "Apply", "Interview"];
+const NAV_ITEMS = [
+  { label: "Play and Learn" },
+  { label: "Practice" },
+  { label: "Compete" },
+  { label: "Apply" },
+  { label: "Interview" },
+  { label: "Posts", path: "/student/posts" },
+];
 
 const StudentNavbar = () => {
   const navigate = useNavigate();
-  const [active, setActive] = useState(""); // visual only for now
+  const { pathname } = useLocation();
+  const [active, setActive] = useState(""); // visual only for items without a page yet
   const [menuOpen, setMenuOpen] = useState(false); // profile dropdown
   const [mobileOpen, setMobileOpen] = useState(false); // hamburger menu
   const profileRef = useRef(null);
+
+  const onPageItem = NAV_ITEMS.some((item) => item.path && pathname.startsWith(item.path));
 
   const logout = () => {
     closeSocket();
     localStorage.removeItem("token");
     localStorage.removeItem("user");
     navigate("/login");
+  };
+
+  const openItem = (item) => {
+    if (item.path) {
+      navigate(item.path);
+    } else {
+      setActive(item.label);
+    }
   };
 
   // Close the dropdown on outside click or Escape
@@ -41,12 +59,15 @@ const StudentNavbar = () => {
     };
   }, []);
 
-  const linkClass = (item) =>
-    `rounded-lg px-3.5 py-2 text-sm font-medium transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-orange-500 ${
-      active === item
+  const linkClass = (item) => {
+    const isActive = item.path ? pathname.startsWith(item.path) : !onPageItem && active === item.label;
+
+    return `rounded-lg px-3.5 py-2 text-sm font-medium transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-orange-500 ${
+      isActive
         ? "bg-orange-50 font-semibold text-orange-600"
         : "text-slate-500 hover:bg-slate-100 hover:text-slate-900"
     }`;
+  };
 
   return (
     <header className="sticky top-0 z-50 border-b border-slate-200 bg-white/90 backdrop-blur">
@@ -59,8 +80,8 @@ const StudentNavbar = () => {
         {/* Middle links (desktop) */}
         <nav className="hidden flex-1 items-center gap-1 lg:flex" aria-label="Main">
           {NAV_ITEMS.map((item) => (
-            <button key={item} type="button" className={linkClass(item)} onClick={() => setActive(item)}>
-              {item}
+            <button key={item.label} type="button" className={linkClass(item)} onClick={() => openItem(item)}>
+              {item.label}
             </button>
           ))}
         </nav>
@@ -142,15 +163,15 @@ const StudentNavbar = () => {
         >
           {NAV_ITEMS.map((item) => (
             <button
-              key={item}
+              key={item.label}
               type="button"
               className={`${linkClass(item)} text-left`}
               onClick={() => {
-                setActive(item);
+                openItem(item);
                 setMobileOpen(false);
               }}
             >
-              {item}
+              {item.label}
             </button>
           ))}
         </nav>

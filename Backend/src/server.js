@@ -40,6 +40,11 @@ app.use("/api/student", studentProfileRoutes);
 const messageRoutes = require("./routes/messages");
 app.use("/api/messages", messageRoutes);
 
+// post routes
+
+const postRoutes = require("./routes/posts");
+app.use("/api/posts", postRoutes);
+
 app.get("/", (req, res) => {
     res.json({ message: "CodeQuest API is running" });
 });
