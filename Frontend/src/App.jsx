@@ -8,6 +8,8 @@ import StudentProfile from "./Student/Student_Pages/StudentProfile";
 import Edit_profile from "./Student/Student_Pages/Edit_profile";
 import Messages from "./Student/Student_Pages/Messages";
 import Post from "./Student/Student_Pages/Post";
+import Games from "./Student/Student_Pages/Games";
+import Game1 from "./Student/Student_Pages/Game1";
 import CompanyHome from "./Company/Company_Pages/CompanyHome";
 import AdminHome from "./Admin/Admin_Pages/AdminHome";
 
@@ -63,6 +65,22 @@ export default function App() {
         element={
           <ProtectedRoute role="Student">
             <Post />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/student/games"
+        element={
+          <ProtectedRoute role="Student">
+            <Games />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/student/games/1"
+        element={
+          <ProtectedRoute role="Student">
+            <Game1 />
           </ProtectedRoute>
         }
       />

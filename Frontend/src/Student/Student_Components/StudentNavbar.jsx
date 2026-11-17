@@ -5,7 +5,7 @@ import MessagesButton from "./MessagesButton";
 import { closeSocket } from "../../socketclient";
 
 const NAV_ITEMS = [
-  { label: "Play and Learn" },
+  { label: "Play and Learn", path: "/student/games" },
   { label: "Practice" },
   { label: "Compete" },
   { label: "Apply" },
