@@ -13,9 +13,19 @@ const GAMES = [
       "Enemy ships fly in pairs. Compare their distances with if / else and shoot the closest one before it crashes into you.",
     path: "/student/games/1",
   },
+  {
+    id: 2,
+    title: "Cyber Vault Hacker",
+    topic: "binary search",
+    difficulty: "Intermediate",
+    levels: 3,
+    description:
+      "Crack a secured digital vault. Cut the search range in half with a while loop before the security alarm locks you out.",
+    path: "/student/games/2",
+  },
 ];
 
-function GamePreview() {
+function SpacePreview() {
   return (
     <svg viewBox="0 0 400 200" className="block h-auto w-full" role="img" aria-label="Space Defender preview">
       <defs>
@@ -62,6 +72,103 @@ function GamePreview() {
   );
 }
 
+function VaultPreview() {
+  return (
+    <svg viewBox="0 0 400 200" className="block h-auto w-full" role="img" aria-label="Cyber Vault Hacker preview">
+      <defs>
+        <linearGradient id="vaultPreviewSky" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0" stopColor="#0a1024" />
+          <stop offset="1" stopColor="#050810" />
+        </linearGradient>
+        <radialGradient id="vaultPreviewGlow" cx="0.28" cy="0.5" r="0.6">
+          <stop offset="0" stopColor="#22d3ee" stopOpacity="0.22" />
+          <stop offset="1" stopColor="#22d3ee" stopOpacity="0" />
+        </radialGradient>
+      </defs>
+
+      <rect width="400" height="200" fill="url(#vaultPreviewSky)" />
+      <rect width="400" height="200" fill="url(#vaultPreviewGlow)" />
+
+      {[
+        [210, 10],
+        [240, 30],
+        [275, 12],
+        [310, 28],
+        [350, 8],
+        [380, 24],
+        [225, 180],
+        [300, 186],
+        [365, 176],
+      ].map(([x, y]) => (
+        <rect key={`${x}-${y}`} x={x} y={y} width="3" height="3" fill="#22d3ee" opacity="0.35" />
+      ))}
+
+      <circle cx="105" cy="100" r="78" fill="#141b36" stroke="#2c3a66" strokeWidth="2" />
+      <circle cx="105" cy="100" r="68" fill="#3a4466" stroke="#5a6a99" strokeWidth="2" />
+      <circle cx="105" cy="100" r="46" fill="#2d3556" stroke="#4a5784" />
+
+      {Array.from({ length: 12 }, (_, i) => {
+        const angle = (i / 12) * Math.PI * 2;
+        return (
+          <circle
+            key={i}
+            cx={105 + Math.cos(angle) * 58}
+            cy={100 + Math.sin(angle) * 58}
+            r="3"
+            fill="#1c2441"
+          />
+        );
+      })}
+
+      {[0, 120, 240].map((deg) => (
+        <g key={deg} transform={`rotate(${deg + 20} 105 100)`}>
+          <line x1="105" y1="100" x2="105" y2="68" stroke="#9aa6cf" strokeWidth="5" strokeLinecap="round" />
+          <circle cx="105" cy="68" r="6" fill="#c7d0f0" />
+          <circle cx="105" cy="68" r="2.4" fill="#22d3ee" />
+        </g>
+      ))}
+
+      <circle cx="105" cy="100" r="17" fill="#0b1020" stroke="#22d3ee" strokeWidth="2" />
+      <rect x="99" y="99" width="12" height="9" fill="#22d3ee" />
+      <path d="M100 99 A5 5 0 0 1 110 99" fill="none" stroke="#22d3ee" strokeWidth="2" />
+
+      <rect x="206" y="22" width="178" height="62" fill="#070b1a" stroke="#22d3ee" strokeOpacity="0.45" />
+      <text x="218" y="42" fill="#22d3ee" fontSize="12" fontFamily="monospace" fontWeight="bold">
+        LOW = 1
+      </text>
+      <text x="218" y="58" fill="#22d3ee" fontSize="12" fontFamily="monospace" fontWeight="bold">
+        HIGH = 128
+      </text>
+      <text x="218" y="75" fill="#fbbf24" fontSize="12" fontFamily="monospace" fontWeight="bold">
+        Enter your MID: 64
+      </text>
+
+      <rect x="206" y="98" width="178" height="30" fill="#070b1a" stroke="#22d3ee" strokeOpacity="0.45" />
+      <rect x="216" y="108" width="158" height="10" fill="#0b1226" />
+      <rect x="296" y="108" width="40" height="10" fill="#22d3ee" fillOpacity="0.6" />
+      <polygon points="296,102 304,102 300,108" fill="#fbbf24" />
+
+      <rect x="206" y="142" width="178" height="34" fill="#070b1a" stroke="#f87171" strokeOpacity="0.45" />
+      {Array.from({ length: 16 }, (_, i) => (
+        <rect
+          key={i}
+          x={214 + i * 10.5}
+          y="156"
+          width="8"
+          height="12"
+          fill={i < 5 ? "#34d399" : i < 9 ? "#fbbf24" : "#ffffff"}
+          fillOpacity={i < 9 ? 0.85 : 0.07}
+        />
+      ))}
+      <text x="214" y="152" fill="#94a3b8" fontSize="7" fontFamily="monospace">
+        SECURITY ALARM
+      </text>
+    </svg>
+  );
+}
+
+const PREVIEWS = { 1: SpacePreview, 2: VaultPreview };
+
 const Games = () => {
   return (
     <div className="min-h-screen bg-orange-50 text-stone-900">
@@ -77,41 +184,45 @@ const Games = () => {
         </p>
 
         <div className="grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-3">
-          {GAMES.map((game) => (
-            <article
-              key={game.id}
-              className="flex flex-col overflow-hidden rounded-2xl border border-orange-100 bg-white shadow-sm"
-            >
-              <GamePreview />
+          {GAMES.map((game) => {
+            const Preview = PREVIEWS[game.id];
 
-              <div className="flex flex-1 flex-col p-5">
-                <div className="flex flex-wrap items-center gap-2">
-                  <span className="rounded-full bg-orange-100 px-2.5 py-0.5 text-[11px] font-semibold text-orange-700">
-                    Game {game.id}
-                  </span>
-                  <span className="rounded-full bg-stone-100 px-2.5 py-0.5 text-[11px] font-medium text-stone-600">
-                    {game.difficulty}
-                  </span>
-                  <span className="rounded-full bg-amber-100 px-2.5 py-0.5 text-[11px] font-medium text-amber-700">
-                    {game.topic}
-                  </span>
+            return (
+              <article
+                key={game.id}
+                className="flex flex-col overflow-hidden rounded-2xl border border-orange-100 bg-white shadow-sm"
+              >
+                <Preview />
+
+                <div className="flex flex-1 flex-col p-5">
+                  <div className="flex flex-wrap items-center gap-2">
+                    <span className="rounded-full bg-orange-100 px-2.5 py-0.5 text-[11px] font-semibold text-orange-700">
+                      Game {game.id}
+                    </span>
+                    <span className="rounded-full bg-stone-100 px-2.5 py-0.5 text-[11px] font-medium text-stone-600">
+                      {game.difficulty}
+                    </span>
+                    <span className="rounded-full bg-amber-100 px-2.5 py-0.5 text-[11px] font-medium text-amber-700">
+                      {game.topic}
+                    </span>
+                  </div>
+
+                  <h2 className="m-0 mt-3 text-lg font-semibold text-stone-900">{game.title}</h2>
+                  <p className="m-0 mt-1 flex-1 text-sm leading-relaxed text-stone-600">{game.description}</p>
+
+                  <div className="mt-4 flex items-center justify-between gap-3">
+                    <span className="text-xs text-stone-500">{game.levels} levels</span>
+                    <Link
+                      to={game.path}
+                      className="inline-block rounded-lg bg-orange-500 px-5 py-2 text-sm font-semibold text-white no-underline hover:bg-orange-600"
+                    >
+                      Play
+                    </Link>
+                  </div>
                 </div>
-
-                <h2 className="m-0 mt-3 text-lg font-semibold text-stone-900">{game.title}</h2>
-                <p className="m-0 mt-1 flex-1 text-sm leading-relaxed text-stone-600">{game.description}</p>
-
-                <div className="mt-4 flex items-center justify-between gap-3">
-                  <span className="text-xs text-stone-500">{game.levels} levels</span>
-                  <Link
-                    to={game.path}
-                    className="inline-block rounded-lg bg-orange-500 px-5 py-2 text-sm font-semibold text-white no-underline hover:bg-orange-600"
-                  >
-                    Play
-                  </Link>
-                </div>
-              </div>
-            </article>
-          ))}
+              </article>
+            );
+          })}
 
           <div className="flex min-h-[260px] flex-col items-center justify-center rounded-2xl border border-dashed border-orange-300 bg-orange-50/60 p-6 text-center">
             <p className="m-0 text-sm font-semibold text-stone-700">More games coming soon</p>
