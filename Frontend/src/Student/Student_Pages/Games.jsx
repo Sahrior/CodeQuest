@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { Link } from "react-router-dom";
 import StudentNav from "../Student_Components/StudentNav";
 import { linkSmall } from "../Student_Components/shared";
@@ -170,6 +171,16 @@ function VaultPreview() {
 const PREVIEWS = { 1: SpacePreview, 2: VaultPreview };
 
 const Games = () => {
+  const [query, setQuery] = useState("");
+
+  const q = query.trim().toLowerCase();
+  const filteredGames = GAMES.filter((game) =>
+    [game.title, game.topic, game.difficulty, game.description]
+      .join(" ")
+      .toLowerCase()
+      .includes(q)
+  );
+
   return (
     <div className="min-h-screen bg-orange-50 text-stone-900">
       <StudentNav />
@@ -183,8 +194,19 @@ const Games = () => {
           Learn problem solving by coding small games. Write the logic, press Submit and watch it play out.
         </p>
 
+        <div className="relative mb-6 max-w-md">
+          <input
+            type="search"
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
+            placeholder="Search games by name, topic or level..."
+            aria-label="Search games"
+            className="w-full rounded-lg border border-orange-200 bg-white px-4 py-2 text-sm text-stone-900 placeholder:text-stone-400 focus:border-orange-400 focus:outline-none focus:ring-2 focus:ring-orange-200"
+          />
+        </div>
+
         <div className="grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-3">
-          {GAMES.map((game) => {
+          {filteredGames.map((game) => {
             const Preview = PREVIEWS[game.id];
 
             return (
@@ -224,10 +246,18 @@ const Games = () => {
             );
           })}
 
-          <div className="flex min-h-[260px] flex-col items-center justify-center rounded-2xl border border-dashed border-orange-300 bg-orange-50/60 p-6 text-center">
-            <p className="m-0 text-sm font-semibold text-stone-700">More games coming soon</p>
-            <p className="m-0 mt-1 text-xs text-stone-500">New games will appear here as soon as they are ready.</p>
-          </div>
+          {filteredGames.length === 0 && (
+            <p className="col-span-full m-0 text-sm text-stone-500">
+              No games found for "{query}".
+            </p>
+          )}
+
+          {!q && (
+            <div className="flex min-h-[260px] flex-col items-center justify-center rounded-2xl border border-dashed border-orange-300 bg-orange-50/60 p-6 text-center">
+              <p className="m-0 text-sm font-semibold text-stone-700">More games coming soon</p>
+              <p className="m-0 mt-1 text-xs text-stone-500">New games will appear here as soon as they are ready.</p>
+            </div>
+          )}
         </div>
       </main>
     </div>
