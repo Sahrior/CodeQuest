@@ -1,4 +1,4 @@
-import { compile, createSession } from "./cppInterpreter";
+import { compile, createSession } from "../Student_Components/game/cppInterpreter";
 
 export const STARTER_CODE = `#include <iostream>
 #include <string>
