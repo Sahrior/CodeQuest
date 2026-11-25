@@ -170,16 +170,72 @@ function VaultPreview() {
 
 const PREVIEWS = { 1: SpacePreview, 2: VaultPreview };
 
+const DIFFICULTY_ORDER = { Beginner: 0, Intermediate: 1, Advanced: 2 };
+const DIFFICULTIES = [...new Set(GAMES.map((g) => g.difficulty))].sort(
+  (a, b) => (DIFFICULTY_ORDER[a] ?? 99) - (DIFFICULTY_ORDER[b] ?? 99)
+);
+const TOPICS = [...new Set(GAMES.map((g) => g.topic))];
+
+const SORT_OPTIONS = [
+  { value: "default", label: "Default" },
+  { value: "title-asc", label: "Title (A–Z)" },
+  { value: "title-desc", label: "Title (Z–A)" },
+  { value: "difficulty-asc", label: "Difficulty (easiest first)" },
+  { value: "difficulty-desc", label: "Difficulty (hardest first)" },
+  { value: "levels-desc", label: "Most levels" },
+  { value: "levels-asc", label: "Fewest levels" },
+];
+
+const compareGames = (sortBy) => (a, b) => {
+  const diffA = DIFFICULTY_ORDER[a.difficulty] ?? 99;
+  const diffB = DIFFICULTY_ORDER[b.difficulty] ?? 99;
+
+  switch (sortBy) {
+    case "title-asc":
+      return a.title.localeCompare(b.title);
+    case "title-desc":
+      return b.title.localeCompare(a.title);
+    case "difficulty-asc":
+      return diffA - diffB;
+    case "difficulty-desc":
+      return diffB - diffA;
+    case "levels-desc":
+      return b.levels - a.levels;
+    case "levels-asc":
+      return a.levels - b.levels;
+    default:
+      return a.id - b.id;
+  }
+};
+
+const selectClass =
+  "rounded-lg border border-orange-200 bg-white px-3 py-2 text-sm text-stone-900 focus:border-orange-400 focus:outline-none focus:ring-2 focus:ring-orange-200";
+
 const Games = () => {
   const [query, setQuery] = useState("");
+  const [difficulty, setDifficulty] = useState("all");
+  const [topic, setTopic] = useState("all");
+  const [sortBy, setSortBy] = useState("default");
 
   const q = query.trim().toLowerCase();
+  const hasActiveFilters = q !== "" || difficulty !== "all" || topic !== "all";
+
   const filteredGames = GAMES.filter((game) =>
     [game.title, game.topic, game.difficulty, game.description]
       .join(" ")
       .toLowerCase()
       .includes(q)
-  );
+  )
+    .filter((game) => difficulty === "all" || game.difficulty === difficulty)
+    .filter((game) => topic === "all" || game.topic === topic)
+    .sort(compareGames(sortBy));
+
+  const clearFilters = () => {
+    setQuery("");
+    setDifficulty("all");
+    setTopic("all");
+    setSortBy("default");
+  };
 
   return (
     <div className="min-h-screen bg-orange-50 text-stone-900">
@@ -194,15 +250,68 @@ const Games = () => {
           Learn problem solving by coding small games. Write the logic, press Submit and watch it play out.
         </p>
 
-        <div className="relative mb-6 max-w-md">
-          <input
-            type="search"
-            value={query}
-            onChange={(e) => setQuery(e.target.value)}
-            placeholder="Search games by name, topic or level..."
-            aria-label="Search games"
-            className="w-full rounded-lg border border-orange-200 bg-white px-4 py-2 text-sm text-stone-900 placeholder:text-stone-400 focus:border-orange-400 focus:outline-none focus:ring-2 focus:ring-orange-200"
-          />
+        <div className="mb-6 flex flex-col gap-3">
+          <div className="relative max-w-md">
+            <input
+              type="search"
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
+              placeholder="Search games by name, topic or level..."
+              aria-label="Search games"
+              className="w-full rounded-lg border border-orange-200 bg-white px-4 py-2 text-sm text-stone-900 placeholder:text-stone-400 focus:border-orange-400 focus:outline-none focus:ring-2 focus:ring-orange-200"
+            />
+          </div>
+
+          <div className="flex flex-wrap items-end gap-3">
+            <label className="flex flex-col gap-1 text-xs font-medium text-stone-500">
+              Difficulty
+              <select value={difficulty} onChange={(e) => setDifficulty(e.target.value)} className={selectClass}>
+                <option value="all">All difficulties</option>
+                {DIFFICULTIES.map((d) => (
+                  <option key={d} value={d}>
+                    {d}
+                  </option>
+                ))}
+              </select>
+            </label>
+
+            <label className="flex flex-col gap-1 text-xs font-medium text-stone-500">
+              Topic
+              <select value={topic} onChange={(e) => setTopic(e.target.value)} className={selectClass}>
+                <option value="all">All topics</option>
+                {TOPICS.map((t) => (
+                  <option key={t} value={t}>
+                    {t}
+                  </option>
+                ))}
+              </select>
+            </label>
+
+            <label className="flex flex-col gap-1 text-xs font-medium text-stone-500">
+              Sort by
+              <select value={sortBy} onChange={(e) => setSortBy(e.target.value)} className={selectClass}>
+                {SORT_OPTIONS.map((o) => (
+                  <option key={o.value} value={o.value}>
+                    {o.label}
+                  </option>
+                ))}
+              </select>
+            </label>
+
+            {(hasActiveFilters || sortBy !== "default") && (
+              <button
+                type="button"
+                onClick={clearFilters}
+                className="rounded-lg border border-orange-200 bg-white px-3 py-2 text-sm font-medium text-orange-700 hover:bg-orange-100"
+              >
+                Clear all
+              </button>
+            )}
+          </div>
+
+          <p className="m-0 text-xs text-stone-500">
+            Showing {filteredGames.length} of {GAMES.length} games
+          </p>
         </div>
 
         <div className="grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-3">
@@ -248,11 +357,18 @@ const Games = () => {
 
           {filteredGames.length === 0 && (
             <p className="col-span-full m-0 text-sm text-stone-500">
-              No games found for "{query}".
+              No games match your search or filters.{" "}
+              <button
+                type="button"
+                onClick={clearFilters}
+                className="font-semibold text-orange-600 underline hover:text-orange-700"
+              >
+                Clear all
+              </button>
             </p>
           )}
 
-          {!q && (
+          {!hasActiveFilters && (
             <div className="flex min-h-[260px] flex-col items-center justify-center rounded-2xl border border-dashed border-orange-300 bg-orange-50/60 p-6 text-center">
               <p className="m-0 text-sm font-semibold text-stone-700">More games coming soon</p>
               <p className="m-0 mt-1 text-xs text-stone-500">New games will appear here as soon as they are ready.</p>
