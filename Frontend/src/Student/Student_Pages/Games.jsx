@@ -24,6 +24,16 @@ const GAMES = [
       "Crack a secured digital vault. Cut the search range in half with a while loop before the security alarm locks you out.",
     path: "/student/games/2",
   },
+  {
+    id: 3,
+    title: "Galactic Route",
+    topic: "shortest paths",
+    difficulty: "Advanced",
+    levels: 3,
+    description:
+      "Command an exploration ship. Each galaxy breaks your last algorithm, so you upgrade from DFS and BFS to Dijkstra and finally Bellman-Ford.",
+    path: "/student/games/3",
+  },
 ];
 
 function SpacePreview() {
@@ -168,7 +178,55 @@ function VaultPreview() {
   );
 }
 
-const PREVIEWS = { 1: SpacePreview, 2: VaultPreview };
+function GalaxyPreview() {
+  const nodes = { A: [50, 100], B: [140, 45], C: [140, 155], D: [250, 100], E: [350, 100] };
+  const edges = [["A", "B", "4"], ["A", "C", "3"], ["B", "C", "-6"], ["B", "D", "6"], ["C", "D", "2"], ["D", "E", "-4"]];
+  return (
+    <svg viewBox="0 0 400 200" className="block h-auto w-full" role="img" aria-label="Galactic Route preview">
+      <defs>
+        <linearGradient id="galaxyPreviewSky" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0" stopColor="#0a1024" />
+          <stop offset="1" stopColor="#050810" />
+        </linearGradient>
+        <radialGradient id="galaxyPreviewGlow" cx="0.5" cy="0.5" r="0.6">
+          <stop offset="0" stopColor="#6366f1" stopOpacity="0.25" />
+          <stop offset="1" stopColor="#6366f1" stopOpacity="0" />
+        </radialGradient>
+      </defs>
+      <rect width="400" height="200" fill="url(#galaxyPreviewSky)" />
+      <rect width="400" height="200" fill="url(#galaxyPreviewGlow)" />
+      {[[30, 20], [90, 180], [200, 15], [310, 185], [380, 30], [370, 160], [20, 150], [260, 30]].map(([x, y]) => (
+        <rect key={`${x}-${y}`} x={x} y={y} width="2" height="2" fill="#fed7aa" opacity="0.7" />
+      ))}
+      {edges.map(([a, b, w]) => {
+        const [x1, y1] = nodes[a];
+        const [x2, y2] = nodes[b];
+        const neg = w.startsWith("-");
+        return (
+          <g key={a + b}>
+            <line x1={x1} y1={y1} x2={x2} y2={y2} stroke={neg ? "#34d399" : "#64748b"} strokeWidth="2" strokeOpacity="0.8" />
+            <text x={(x1 + x2) / 2} y={(y1 + y2) / 2 - 4} fill={neg ? "#6ee7b7" : "#cbd5e1"} fontSize="11" fontFamily="monospace" fontWeight="bold" textAnchor="middle">
+              {w}
+            </text>
+          </g>
+        );
+      })}
+      {Object.entries(nodes).map(([id, [x, y]]) => (
+        <g key={id}>
+          <circle cx={x} cy={y} r="14" fill="#141b36" stroke={id === "A" ? "#fb923c" : "#818cf8"} strokeWidth="2" />
+          <text x={x} y={y + 4} fill="#fff7ed" fontSize="12" fontFamily="monospace" fontWeight="bold" textAnchor="middle">
+            {id}
+          </text>
+        </g>
+      ))}
+      <text x="200" y="190" fill="#fbbf24" fontSize="10" fontFamily="monospace" textAnchor="middle">
+        negative routes: Dijkstra fails
+      </text>
+    </svg>
+  );
+}
+
+const PREVIEWS = { 1: SpacePreview, 2: VaultPreview, 3: GalaxyPreview };
 
 const DIFFICULTY_ORDER = { Beginner: 0, Intermediate: 1, Advanced: 2 };
 const DIFFICULTIES = [...new Set(GAMES.map((g) => g.difficulty))].sort(

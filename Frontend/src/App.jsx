@@ -13,6 +13,8 @@ import Game1 from "./Student/Student_Pages/Game1";
 import CompanyHome from "./Company/Company_Pages/CompanyHome";
 import AdminHome from "./Admin/Admin_Pages/AdminHome";
 import Game2 from "./Student/Student_Pages/Game2";
+import Game3 from "./Student/Student_Pages/Game3";
+
 
 export default function App() {
   return (
@@ -93,6 +95,15 @@ export default function App() {
             <Game2 />
           </ProtectedRoute>
         }
+      />
+
+      <Route 
+        path="/student/games/3" 
+        element={
+          <ProtectedRoute role="Student">
+            <Game3 />
+          </ProtectedRoute>
+        } 
       />
 
 
