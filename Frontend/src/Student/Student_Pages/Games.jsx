@@ -235,7 +235,7 @@ const DIFFICULTIES = [...new Set(GAMES.map((g) => g.difficulty))].sort(
 const TOPICS = [...new Set(GAMES.map((g) => g.topic))];
 
 const SORT_OPTIONS = [
-  { value: "default", label: "Default" },
+  { value: "default", label: "Sort: Default" },
   { value: "title-asc", label: "Title (A–Z)" },
   { value: "title-desc", label: "Title (Z–A)" },
   { value: "difficulty-asc", label: "Difficulty (easiest first)" },
@@ -267,7 +267,7 @@ const compareGames = (sortBy) => (a, b) => {
 };
 
 const selectClass =
-  "rounded-lg border border-orange-200 bg-white px-3 py-2 text-sm text-stone-900 focus:border-orange-400 focus:outline-none focus:ring-2 focus:ring-orange-200";
+  "cursor-pointer rounded-lg border border-orange-200 bg-white px-3 py-2 text-sm text-stone-900 focus:border-orange-400 focus:outline-none focus:ring-2 focus:ring-orange-200";
 
 const Games = () => {
   const [query, setQuery] = useState("");
@@ -308,22 +308,38 @@ const Games = () => {
           Learn problem solving by coding small games. Write the logic, press Submit and watch it play out.
         </p>
 
-        <div className="mb-6 flex flex-col gap-3">
-          <div className="relative max-w-md">
-            <input
-              type="search"
-              value={query}
-              onChange={(e) => setQuery(e.target.value)}
-              placeholder="Search games by name, topic or level..."
-              aria-label="Search games"
-              className="w-full rounded-lg border border-orange-200 bg-white px-4 py-2 text-sm text-stone-900 placeholder:text-stone-400 focus:border-orange-400 focus:outline-none focus:ring-2 focus:ring-orange-200"
-            />
-          </div>
+        <div className="mb-6 rounded-2xl border border-orange-100 bg-white p-3 shadow-sm">
+          <div className="flex flex-col gap-3 lg:flex-row lg:items-center">
+            <div className="relative min-w-0 flex-1">
+              <svg
+                viewBox="0 0 20 20"
+                aria-hidden="true"
+                className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-stone-400"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+              >
+                <circle cx="8.5" cy="8.5" r="5.5" />
+                <path d="M13 13l4 4" />
+              </svg>
+              <input
+                type="search"
+                value={query}
+                onChange={(e) => setQuery(e.target.value)}
+                placeholder="Search games by name, topic or level..."
+                aria-label="Search games"
+                className="w-full rounded-lg border border-orange-200 bg-orange-50/40 py-2 pl-9 pr-3 text-sm text-stone-900 placeholder:text-stone-400 focus:border-orange-400 focus:bg-white focus:outline-none focus:ring-2 focus:ring-orange-200"
+              />
+            </div>
 
-          <div className="flex flex-wrap items-end gap-3">
-            <label className="flex flex-col gap-1 text-xs font-medium text-stone-500">
-              Difficulty
-              <select value={difficulty} onChange={(e) => setDifficulty(e.target.value)} className={selectClass}>
+            <div className="flex flex-wrap items-center gap-2">
+              <select
+                value={difficulty}
+                onChange={(e) => setDifficulty(e.target.value)}
+                aria-label="Filter by difficulty"
+                className={selectClass}
+              >
                 <option value="all">All difficulties</option>
                 {DIFFICULTIES.map((d) => (
                   <option key={d} value={d}>
@@ -331,11 +347,8 @@ const Games = () => {
                   </option>
                 ))}
               </select>
-            </label>
 
-            <label className="flex flex-col gap-1 text-xs font-medium text-stone-500">
-              Topic
-              <select value={topic} onChange={(e) => setTopic(e.target.value)} className={selectClass}>
+              <select value={topic} onChange={(e) => setTopic(e.target.value)} aria-label="Filter by topic" className={selectClass}>
                 <option value="all">All topics</option>
                 {TOPICS.map((t) => (
                   <option key={t} value={t}>
@@ -343,31 +356,28 @@ const Games = () => {
                   </option>
                 ))}
               </select>
-            </label>
 
-            <label className="flex flex-col gap-1 text-xs font-medium text-stone-500">
-              Sort by
-              <select value={sortBy} onChange={(e) => setSortBy(e.target.value)} className={selectClass}>
+              <select value={sortBy} onChange={(e) => setSortBy(e.target.value)} aria-label="Sort games" className={selectClass}>
                 {SORT_OPTIONS.map((o) => (
                   <option key={o.value} value={o.value}>
                     {o.label}
                   </option>
                 ))}
               </select>
-            </label>
 
-            {(hasActiveFilters || sortBy !== "default") && (
-              <button
-                type="button"
-                onClick={clearFilters}
-                className="rounded-lg border border-orange-200 bg-white px-3 py-2 text-sm font-medium text-orange-700 hover:bg-orange-100"
-              >
-                Clear all
-              </button>
-            )}
+              {(hasActiveFilters || sortBy !== "default") && (
+                <button
+                  type="button"
+                  onClick={clearFilters}
+                  className="rounded-lg px-3 py-2 text-sm font-medium text-orange-700 hover:bg-orange-100"
+                >
+                  Clear all
+                </button>
+              )}
+            </div>
           </div>
 
-          <p className="m-0 text-xs text-stone-500">
+          <p className="m-0 mt-2 px-1 text-xs text-stone-500">
             Showing {filteredGames.length} of {GAMES.length} games
           </p>
         </div>
